@@ -12,23 +12,23 @@ This library provides basic integration for using resources from WebJars as Tape
 A basic usage example to override Tapestry's shipped jQuery library with a newer version.
 
 `build.gradle`:
-```
-  respositories {
-    jcenter()
-  }
+```groovy
+respositories {
+  jcenter()
+}
 
-  dependencies {
-    runtime 'de.eddyson:tapestry-webjars:0.5.0'
-    runtime 'org.webjars:jquery:2.1.3'
-  }
+dependencies {
+  runtime 'de.eddyson:tapestry-webjars:0.5.0'
+  runtime 'org.webjars:jquery:2.1.3'
+}
 
 ```
 
 Application Module:
-```
-  @Contribute(JavaScriptStack.class)
-  @Core
-  public static void overrideJQueryWithNewerVersion(final OrderedConfiguration<StackExtension> configuration) {
-    configuration.override("jquery-library", StackExtension.library("webjars:jquery.js"));
-  }
+```java
+@Contribute(JavaScriptStack.class)
+@Core
+public static void overrideJQueryWithNewerVersion(final OrderedConfiguration<StackExtension> configuration) {
+ configuration.override("jquery-library", StackExtension.library("webjars:jquery.js"));
+}
 ```
