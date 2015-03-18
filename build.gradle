@@ -16,6 +16,10 @@ def versions= [
   spock: '1.0-groovy-2.4'
 ]
 
+repositories {
+  jcenter()
+}
+
 sourceCompatibility = '1.7'
 
 task sourceJar(type: Jar) {
