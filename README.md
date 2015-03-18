@@ -1,4 +1,4 @@
-# tapestry-webjars
+# tapestry-webjars [![Build Status](https://travis-ci.org/eddyson-de/tapestry-webjars.svg?branch=master)](https://travis-ci.org/eddyson-de/tapestry-webjars)
 Use WebJars (http://www.webjars.org/) together with Tapestry (http://tapestry.apache.org/).
 
 From http://www.webjars.org/:
