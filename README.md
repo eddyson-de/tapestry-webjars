@@ -11,7 +11,7 @@ This library provides basic integration for using resources from WebJars as Tape
 
 A basic usage example to override Tapestry's shipped jQuery library with a newer version.
 
-`build.gradle`:
+### `build.gradle`:
 ```groovy
 respositories {
   jcenter()
@@ -24,7 +24,7 @@ dependencies {
 
 ```
 
-Application Module:
+### Application Module:
 ```java
 @Contribute(JavaScriptStack.class)
 @Core
