@@ -28,7 +28,8 @@ dependencies {
 ```java
 @Contribute(JavaScriptStack.class)
 @Core
-public static void overrideJQueryWithNewerVersion(final OrderedConfiguration<StackExtension> configuration) {
- configuration.override("jquery-library", StackExtension.library("webjars:jquery.js"));
+public static void overrideJQueryWithNewerVersion(
+    final OrderedConfiguration<StackExtension> configuration) {
+  configuration.override("jquery-library", StackExtension.library("webjars:jquery.js"));
 }
 ```
