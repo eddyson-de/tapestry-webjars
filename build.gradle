@@ -1,18 +1,18 @@
 description = "Use Webjars together with Tapestry"
 
 group = "de.eddyson"
-version = "0.5.0"
+version = "0.6.0"
 
 apply plugin: 'groovy'
 apply plugin: 'maven'
 
 def versions= [
-  webjars_locator: '0.21',
+  webjars_locator: '0.26',
   tapestry: '5.4-beta-26',
-  slf4j: '1.7.10',
+  slf4j: '1.7.12',
   
   // test scopes
-  codemirror: '5.0-1',
+  codemirror: '5.4',
   spock: '1.0-groovy-2.4'
 ]
 
@@ -35,9 +35,7 @@ artifacts {
 dependencies {
   compile "org.slf4j:slf4j-api:$versions.slf4j"
   compile "org.apache.tapestry:tapestry-core:$versions.tapestry"
-  compile ("org.webjars:webjars-locator:$versions.webjars_locator"){
-    exclude group:'com.fasterxml.jackson.core', module: 'jackson-databind'
-  }
+  compile "org.webjars:webjars-locator-core:$versions.webjars_locator"
 
   testCompile "javax.servlet:servlet-api:2.5"
   testCompile "org.spockframework:spock-tapestry:$versions.spock"
