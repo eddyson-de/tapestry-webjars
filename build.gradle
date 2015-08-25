@@ -7,12 +7,12 @@ apply plugin: 'groovy'
 apply plugin: 'maven'
 
 def versions= [
-  webjars_locator: '0.26',
-  tapestry: '5.4-beta-26',
+  webjars_locator: '0.27',
+  tapestry: '5.4-beta-35',
   slf4j: '1.7.12',
   
   // test scopes
-  codemirror: '5.4',
+  codemirror: '5.6',
   spock: '1.0-groovy-2.4'
 ]
 
