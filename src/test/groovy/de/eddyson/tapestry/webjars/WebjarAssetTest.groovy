@@ -31,6 +31,17 @@ class WebjarAssetTest extends spock.lang.Specification {
     then:
     content.contains "// This is CodeMirror (http://codemirror.net)"
   }
+  
+  def "Create webjars asset with webjar specified"(){
+    when:
+    def cmAsset = assetSource.getUnlocalizedAsset("webjars:codemirror:codemirror.js")
+    then:
+    cmAsset != null
+    when:
+    def content = cmAsset.getResource().openStream().text
+    then:
+    content.contains "// This is CodeMirror (http://codemirror.net)"
+  }
 
   def "Test hashCode and equals for the same path"(){
     when:

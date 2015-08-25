@@ -20,7 +20,8 @@ public class WebjarsResource extends AbstractResource {
 
   private final ClassLoader classLoader;
 
-  public WebjarsResource(final String path, final WebJarAssetLocator webJarAssetLocator, final ClassLoader classLoader) {
+  public WebjarsResource(final String path, final WebJarAssetLocator webJarAssetLocator,
+      final ClassLoader classLoader) {
     super(path);
     this.webJarAssetLocator = webJarAssetLocator;
     this.classLoader = classLoader;
@@ -49,9 +50,19 @@ public class WebjarsResource extends AbstractResource {
 
       if (!urlResolved) {
         try {
-          String fullPath = webJarAssetLocator.getFullPath(getPath());
+          String path = getPath();
+          int indexOfColon = path.indexOf(':');
+          String fullPath;
+          if (indexOfColon < 0) {
+            fullPath = webJarAssetLocator.getFullPath(path);
+          } else {
+            String webjar = path.substring(0, indexOfColon);
+            path = path.substring(indexOfColon + 1);
+            fullPath = webJarAssetLocator.getFullPath(webjar, path);
+          }
           url = classLoader.getResource(fullPath);
           this.fullPath = fullPath.substring(WebJarAssetLocator.WEBJARS_PATH_PREFIX.length() + 1);
+
         } catch (IllegalArgumentException e) {
           url = null;
         }
