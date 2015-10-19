@@ -1,18 +1,22 @@
+plugins {
+    id "com.jfrog.bintray" version "1.4"
+}
+
 description = "Use Webjars together with Tapestry"
 
 group = "de.eddyson"
-version = "0.7.0"
+version = "0.8.0"
 
 apply plugin: 'groovy'
 apply plugin: 'maven'
 
 def versions= [
-  webjars_locator: '0.27',
+  webjars_locator: '0.28',
   tapestry: '5.4-beta-35',
   slf4j: '1.7.12',
   
   // test scopes
-  codemirror: '5.6',
+  codemirror: '5.7',
   spock: '1.0-groovy-2.4'
 ]
 
@@ -41,6 +45,17 @@ dependencies {
   testCompile "org.spockframework:spock-tapestry:$versions.spock"
   testRuntime "org.webjars:codemirror:$versions.codemirror"
   testRuntime "org.slf4j:slf4j-simple:$versions.slf4j"
+}
+
+bintray {
+    user = { getProperty('bintrayUser') }
+    key = { getProperty('bintrayAPIKey') }
+    configurations = ['archives']
+    publish = true
+    pkg {
+        repo = 'maven'
+        name = 'de.eddyson:tapestry-webjars'
+    }
 }
 
 jar {
