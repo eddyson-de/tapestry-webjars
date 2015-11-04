@@ -30,6 +30,48 @@ dependencies {
 @Core
 public static void overrideJQueryWithNewerVersion(
     final OrderedConfiguration<StackExtension> configuration) {
-  configuration.override("jquery-library", StackExtension.library("webjars:jquery.js"));
+  configuration.override("jquery-library", StackExtension.library("webjars:jquery:jquery.js"));
 }
 ```
+
+### Page class:
+Of course, you can also `@Inject` assets from Webjars inside your component classes.
+```java
+@Inject
+@Path("webjars:jquery:jquery.js")
+private Asset jQuery;
+
+```
+
+### Page css:
+You can also use Webjars asset paths inside your CSS files, be sure to use the 'asset:' prefix inside URLs.
+```css
+div.colorful {
+  background: url('asset:webjars:images/rainbow.png');
+}
+
+```
+
+
+
+## Path specification
+
+There are several options to specify asset paths. Find some examples below, ordered worst to best.
+<dl>
+  <dt><code>webjar:file.js</code></dt>
+  <dd>Tries to find a file named <code>file.js</code> in any of the Webjars on the classpath, inside any folder. This is likely to lead to errors because of multiple possible matches</dd>
+
+  <dt><code>webjars:subdirectory/file.js</code></dt>
+  <dd>Tries to find a file named <code>file.js</code> in a subdirectory named <code>subdirectory</code> inside any of the Webjars. The subdirectory does not have to be in the root path of the Webjar and all Webjars are searched, so there can still be multiple matches, e.g. <code>subdirectory/file.js</code> in webjar1, <code>otherdirectory/subdirectory/file.js</code> in webjar1, and <code>subdirectory/file.js</code> in webjar2.</dd>
+
+  <dt><code>webjars:webjar1:file.js</code></dt>
+  <dd>Tries to find a file named <code>file.js</code> in the <code>webjar1</code> Webjar inside any folder. This could still lead to errors if there are multiple files with the same name inside a Webjar inside different directories.</dd>
+  
+    <dt><code>webjars:webjar1:subdirectory/file.js</code></dt>
+  <dd>Tries to find a file named <code>file.js</code> in the <code>webjar1</code> Webjar in a subdirectory named <code>subdirectory</code>. While not very likely, this could still lead to multiple matches, e.g. <code>src/subdirectory/file.js</code>, and <code>test/subdirectory/file.js</code>.</dd>
+
+    <dt><code>webjars:webjar1:$version/subdirectory/file.js</code></dt>
+  <dd>Tries to find a file named <code>file.js</code> in the <code>webjar1</code> Webjar in a subdirectory named <code>subdirectory</code> that is located directly under the directory that resembles the version number of the Webjar. This is the most definite path that can be specified.</dd>
+
+
+</dl>
