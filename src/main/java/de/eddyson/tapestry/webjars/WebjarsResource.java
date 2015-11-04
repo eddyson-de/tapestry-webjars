@@ -71,13 +71,13 @@ public class WebjarsResource extends AbstractResource {
           String fullPath;
           if (indexOfColon < 0) {
             path = resolveVersionInPath(path);
-            logger.info("Trying to resolve {}", path);
+            logger.debug("Trying to resolve {}", path);
             fullPath = webJarAssetLocator.getFullPath(path);
           } else {
             String webjar = path.substring(0, indexOfColon);
             path = path.substring(indexOfColon + 1);
             path = resolveVersionInPath(webjar, path);
-            logger.info("Trying to resolve {} inside {} webjar", path, webjar);
+            logger.debug("Trying to resolve {} inside {} webjar", path, webjar);
             fullPath = webJarAssetLocator.getFullPath(webjar, resolveVersionInPath(webjar, path));
           }
           url = classLoader.getResource(fullPath);
@@ -104,11 +104,11 @@ public class WebjarsResource extends AbstractResource {
         String version = e.getValue();
         StringBuilder sb = new StringBuilder(path);
         sb.replace(indexOfVersionVariable, indexOfVersionVariable + VERSION_VARIABLE.length(), version);
-        logger.info("Trying {} in {}", sb, webjar);
+        logger.debug("Trying {} in {}", sb, webjar);
         try {
           String match = webJarAssetLocator.getFullPath(webjar, sb.toString());
           if (match != null) {
-            logger.info("Found candidate {} for {}", match, path);
+            logger.debug("Found candidate {} for {}", match, path);
             candidates.add(match);
           }
         } catch (MultipleMatchesException ex) {
@@ -134,7 +134,7 @@ public class WebjarsResource extends AbstractResource {
     int indexOfVersionVariable = path.indexOf(VERSION_VARIABLE);
     if (indexOfVersionVariable >= 0) {
       String maybeVersion = webJarAssetLocator.getWebJars().get(webjar);
-      logger.info("Resolved {} for {} to {}", VERSION_VARIABLE, webjar, maybeVersion);
+      logger.debug("Resolved {} for {} to {}", VERSION_VARIABLE, webjar, maybeVersion);
       if (maybeVersion != null) {
         StringBuilder sb = new StringBuilder(path);
         sb.replace(indexOfVersionVariable, indexOfVersionVariable + VERSION_VARIABLE.length(), maybeVersion);
