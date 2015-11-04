@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.apache.tapestry5.internal.services.ResourceStreamer;
 import org.apache.tapestry5.internal.services.assets.ChecksumPath;
+import org.apache.tapestry5.ioc.LoggerSource;
 import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.Response;
 import org.apache.tapestry5.services.assets.AssetRequestHandler;
@@ -15,9 +16,11 @@ public class WebjarsAssetRequestHandler implements AssetRequestHandler {
 
   private final WebjarsResource rootResource;
 
-  public WebjarsAssetRequestHandler(final ResourceStreamer streamer, final WebJarAssetLocator webJarAssetLocator) {
+  public WebjarsAssetRequestHandler(final ResourceStreamer streamer, final WebJarAssetLocator webJarAssetLocator,
+      final LoggerSource loggerSource) {
     this.streamer = streamer;
-    this.rootResource = new WebjarsResource("/", webJarAssetLocator, Thread.currentThread().getContextClassLoader());
+    this.rootResource = new WebjarsResource("/", webJarAssetLocator, loggerSource,
+        Thread.currentThread().getContextClassLoader());
   }
 
   @Override

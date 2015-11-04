@@ -5,18 +5,19 @@ plugins {
 description = "Use Webjars together with Tapestry"
 
 group = "de.eddyson"
-version = "0.8.0"
+version = "0.9.0"
 
 apply plugin: 'groovy'
 apply plugin: 'maven'
 
 def versions= [
-  webjars_locator: '0.28',
-  tapestry: '5.4-beta-35',
+  webjars_locator: '0.29',
+  tapestry: '5.4-rc-1',
   slf4j: '1.7.12',
   
   // test scopes
   codemirror: '5.7',
+  babel: '6.0.20',
   spock: '1.0-groovy-2.4'
 ]
 
@@ -44,6 +45,9 @@ dependencies {
   testCompile "javax.servlet:servlet-api:2.5"
   testCompile "org.spockframework:spock-tapestry:$versions.spock"
   testRuntime "org.webjars:codemirror:$versions.codemirror"
+  testRuntime ("org.webjars.npm:babel-core:$versions.babel"){
+    transitive = false
+  }
   testRuntime "org.slf4j:slf4j-simple:$versions.slf4j"
 }
 

@@ -1,12 +1,20 @@
 package de.eddyson.tapestry.webjars;
 
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map.Entry;
 
+import org.apache.tapestry5.ioc.LoggerSource;
 import org.apache.tapestry5.ioc.Resource;
 import org.apache.tapestry5.ioc.internal.util.AbstractResource;
+import org.slf4j.Logger;
+import org.webjars.MultipleMatchesException;
 import org.webjars.WebJarAssetLocator;
 
 public class WebjarsResource extends AbstractResource {
+
+  public static final String VERSION_VARIABLE = "$version";
 
   // Guarded by lock
   private URL url;
@@ -20,9 +28,18 @@ public class WebjarsResource extends AbstractResource {
 
   private final ClassLoader classLoader;
 
+  private final Logger logger;
+
   public WebjarsResource(final String path, final WebJarAssetLocator webJarAssetLocator,
+      final LoggerSource loggerSource, final ClassLoader classLoader) {
+    this(path, webJarAssetLocator, loggerSource.getLogger(WebjarsResource.class), classLoader);
+
+  }
+
+  public WebjarsResource(final String path, final WebJarAssetLocator webJarAssetLocator, final Logger logger,
       final ClassLoader classLoader) {
     super(path);
+    this.logger = logger;
     this.webJarAssetLocator = webJarAssetLocator;
     this.classLoader = classLoader;
   }
@@ -41,7 +58,6 @@ public class WebjarsResource extends AbstractResource {
     } finally {
       releaseReadLock();
     }
-
   }
 
   private void resolveURL() {
@@ -54,15 +70,21 @@ public class WebjarsResource extends AbstractResource {
           int indexOfColon = path.indexOf(':');
           String fullPath;
           if (indexOfColon < 0) {
+            path = resolveVersionInPath(path);
+            logger.info("Trying to resolve {}", path);
             fullPath = webJarAssetLocator.getFullPath(path);
           } else {
             String webjar = path.substring(0, indexOfColon);
             path = path.substring(indexOfColon + 1);
-            fullPath = webJarAssetLocator.getFullPath(webjar, path);
+            path = resolveVersionInPath(webjar, path);
+            logger.info("Trying to resolve {} inside {} webjar", path, webjar);
+            fullPath = webJarAssetLocator.getFullPath(webjar, resolveVersionInPath(webjar, path));
           }
           url = classLoader.getResource(fullPath);
           this.fullPath = fullPath.substring(WebJarAssetLocator.WEBJARS_PATH_PREFIX.length() + 1);
 
+        } catch (MultipleMatchesException e) {
+          throw e;
         } catch (IllegalArgumentException e) {
           url = null;
         }
@@ -71,6 +93,56 @@ public class WebjarsResource extends AbstractResource {
     } finally {
       downgradeWriteLockToReadLock();
     }
+  }
+
+  private String resolveVersionInPath(final String path) {
+    int indexOfVersionVariable = path.indexOf(VERSION_VARIABLE);
+    if (indexOfVersionVariable >= 0) {
+      List<String> candidates = new LinkedList<>();
+      for (Entry<String, String> e : webJarAssetLocator.getWebJars().entrySet()) {
+        String webjar = e.getKey();
+        String version = e.getValue();
+        StringBuilder sb = new StringBuilder(path);
+        sb.replace(indexOfVersionVariable, indexOfVersionVariable + VERSION_VARIABLE.length(), version);
+        logger.info("Trying {} in {}", sb, webjar);
+        try {
+          String match = webJarAssetLocator.getFullPath(webjar, sb.toString());
+          if (match != null) {
+            logger.info("Found candidate {} for {}", match, path);
+            candidates.add(match);
+          }
+        } catch (MultipleMatchesException ex) {
+          candidates.addAll(ex.getMatches());
+
+        } catch (IllegalArgumentException ex) {
+          continue;
+        }
+      }
+      if (candidates.size() == 1) {
+        return candidates.get(0);
+      } else {
+        throw new MultipleMatchesException("Found multiple candidates for " + path
+            + ", please specify a more specific path. e.g. by including the webjar in the asset path", candidates);
+      }
+
+    }
+    return path;
+
+  }
+
+  private String resolveVersionInPath(final String webjar, final String path) {
+    int indexOfVersionVariable = path.indexOf(VERSION_VARIABLE);
+    if (indexOfVersionVariable >= 0) {
+      String maybeVersion = webJarAssetLocator.getWebJars().get(webjar);
+      logger.info("Resolved {} for {} to {}", VERSION_VARIABLE, webjar, maybeVersion);
+      if (maybeVersion != null) {
+        StringBuilder sb = new StringBuilder(path);
+        sb.replace(indexOfVersionVariable, indexOfVersionVariable + VERSION_VARIABLE.length(), maybeVersion);
+        return sb.toString();
+      }
+
+    }
+    return path;
   }
 
   public String getFullPath() {
@@ -90,7 +162,7 @@ public class WebjarsResource extends AbstractResource {
 
   @Override
   protected Resource newResource(final String path) {
-    return new WebjarsResource(path, webJarAssetLocator, classLoader);
+    return new WebjarsResource(path, webJarAssetLocator, logger, classLoader);
   }
 
   @Override
