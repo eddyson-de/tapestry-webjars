@@ -23,9 +23,8 @@ public class WebjarsAssetFactory extends AbstractAssetFactory {
 
   @Override
   public Asset createAsset(final Resource resource) {
-
-    return createAsset(resource, "webjars", ((WebjarsResource) resource).getFullPath());
-
+    return createAsset(resource, "webjars",
+        ((WebjarsResource) resource).getPath().substring(WebJarAssetLocator.WEBJARS_PATH_PREFIX.length() + 1));
   }
 
 }

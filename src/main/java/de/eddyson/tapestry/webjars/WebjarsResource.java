@@ -22,8 +22,6 @@ public class WebjarsResource extends AbstractResource {
   // Guarded by lock
   private boolean urlResolved;
 
-  private String fullPath;
-
   private final WebJarAssetLocator webJarAssetLocator;
 
   private final ClassLoader classLoader;
@@ -65,28 +63,10 @@ public class WebjarsResource extends AbstractResource {
       upgradeReadLockToWriteLock();
 
       if (!urlResolved) {
-        try {
-          String path = getPath();
-          int indexOfColon = path.indexOf(':');
-          String fullPath;
-          if (indexOfColon < 0) {
-            path = resolveVersionInPath(path);
-            logger.debug("Trying to resolve {}", path);
-            fullPath = webJarAssetLocator.getFullPath(path);
-          } else {
-            String webjar = path.substring(0, indexOfColon);
-            path = path.substring(indexOfColon + 1);
-            path = resolveVersionInPath(webjar, path);
-            logger.debug("Trying to resolve {} inside {} webjar", path, webjar);
-            fullPath = webJarAssetLocator.getFullPath(webjar, resolveVersionInPath(webjar, path));
-          }
-          url = classLoader.getResource(fullPath);
-          this.fullPath = fullPath.substring(WebJarAssetLocator.WEBJARS_PATH_PREFIX.length() + 1);
-
-        } catch (MultipleMatchesException e) {
-          throw e;
-        } catch (IllegalArgumentException e) {
-          url = null;
+        String path = getPath();
+        if (path.startsWith(WebJarAssetLocator.WEBJARS_PATH_PREFIX)) {
+          url = classLoader.getResource(path);
+          validateURL(url);
         }
         urlResolved = true;
       }
@@ -145,24 +125,33 @@ public class WebjarsResource extends AbstractResource {
     return path;
   }
 
-  public String getFullPath() {
-
-    try {
-      acquireReadLock();
-
-      if (!urlResolved) {
-        resolveURL();
-      }
-
-      return fullPath;
-    } finally {
-      releaseReadLock();
-    }
-  }
-
   @Override
   protected Resource newResource(final String path) {
-    return new WebjarsResource(path, webJarAssetLocator, logger, classLoader);
+    String p = path;
+    if (!p.isEmpty() && p.charAt(0) == '/') {
+      p = p.substring(1);
+
+      int indexOfColon = p.indexOf(':');
+      try {
+        if (indexOfColon < 0) {
+          p = resolveVersionInPath(p);
+          logger.debug("Trying to resolve {}", p);
+          p = webJarAssetLocator.getFullPath(p);
+        } else {
+          String webjar = p.substring(0, indexOfColon);
+          p = p.substring(indexOfColon + 1);
+          p = resolveVersionInPath(webjar, p);
+          logger.debug("Trying to resolve {} inside {} webjar", p, webjar);
+          p = webJarAssetLocator.getFullPath(webjar, resolveVersionInPath(webjar, p));
+        }
+
+      } catch (MultipleMatchesException e) {
+        throw e;
+      } catch (IllegalArgumentException e) {
+        return new WebjarsResource(path, webJarAssetLocator, logger, classLoader);
+      }
+    }
+    return new WebjarsResource(p, webJarAssetLocator, logger, classLoader);
   }
 
   @Override
@@ -175,7 +164,7 @@ public class WebjarsResource extends AbstractResource {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((webJarAssetLocator == null) ? 0 : webJarAssetLocator.hashCode());
-    result = prime * result + ((getFullPath() == null) ? 0 : getFullPath().hashCode());
+    result = prime * result + ((getPath() == null) ? 0 : getPath().hashCode());
     return result;
   }
 
@@ -199,11 +188,11 @@ public class WebjarsResource extends AbstractResource {
     } else if (!webJarAssetLocator.equals(other.webJarAssetLocator)) {
       return false;
     }
-    if (getFullPath() == null) {
-      if (other.getFullPath() != null) {
+    if (getPath() == null) {
+      if (other.getPath() != null) {
         return false;
       }
-    } else if (!getFullPath().equals(other.getFullPath())) {
+    } else if (!getPath().equals(other.getPath())) {
       return false;
     }
     return true;
