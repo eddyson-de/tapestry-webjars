@@ -1,19 +1,19 @@
 plugins {
-    id "com.jfrog.bintray" version "1.5"
+    id "com.jfrog.bintray" version "1.6"
 }
 
 description = "Use Webjars together with Tapestry"
 
 group = "de.eddyson"
-version = "0.9.3"
+version = "0.9.4"
 
 apply plugin: 'groovy'
 apply plugin: 'maven'
 
 def versions= [
-  webjars_locator: '0.30',
-  tapestry: '5.4-rc-1',
-  slf4j: '1.7.13',
+  webjars_locator: '0.31',
+  tapestry: '5.4.1',
+  slf4j: '1.7.21',
   
   // test scopes
   codemirror: '5.8',
