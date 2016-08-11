@@ -5,7 +5,7 @@ plugins {
 description = "Use Webjars together with Tapestry"
 
 group = "de.eddyson"
-version = "0.9.4"
+version = "0.9.5"
 
 apply plugin: 'groovy'
 apply plugin: 'maven'

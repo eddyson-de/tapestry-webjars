@@ -20,7 +20,7 @@ respositories {
 }
 
 dependencies {
-  runtime 'de.eddyson:tapestry-webjars:0.9.3'
+  runtime 'de.eddyson:tapestry-webjars:0.9.5'
   runtime 'org.webjars:jquery:2.1.3'
 }
 
@@ -77,3 +77,21 @@ There are several options to specify asset paths. Find some examples below, orde
 
 
 </dl>
+
+## Working with CommonJS modules
+
+CommonJS modules cannot be used with RequireJS without further work (see http://requirejs.org/docs/commonjs.html), there is however a helper class that performs the "manual conversion" that is explained in http://requirejs.org/docs/commonjs.html#manualconversion.  
+For example, to use [deep-equal](https://github.com/substack/node-deep-equal), you would have to add the following configuration:
+```java
+  @Contribute(ModuleManager.class)
+  public static void addDeepEqualModules(final MappedConfiguration<String, JavaScriptModuleConfiguration> configuration,
+      @Path("webjars:deep-equal:index.js") final Resource deepEqual) {
+  configuration.add("deep-equal/index",
+    new CommonJSAMDWrapper(deepEqual).asJavaScriptModuleConfiguration());
+  configuration.add("deep-equal/lib/keys",
+    new CommonJSAMDWrapper(deepEqual.forFile("./lib/keys.js")).asJavaScriptModuleConfiguration());
+  configuration.add("deep-equal/lib/is_arguments",
+    new CommonJSAMDWrapper(deepEqual.forFile("./lib/is_arguments.js")).asJavaScriptModuleConfiguration());
+}
+
+```
