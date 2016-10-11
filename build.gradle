@@ -5,13 +5,13 @@ plugins {
 description = "Use Webjars together with Tapestry"
 
 group = "de.eddyson"
-version = "0.9.5"
+version = "0.9.6"
 
 apply plugin: 'groovy'
 apply plugin: 'maven'
 
 def versions= [
-  webjars_locator: '0.31',
+  webjars_locator: '0.32',
   tapestry: '5.4.1',
   slf4j: '1.7.21',
   
