@@ -16,8 +16,8 @@ def versions= [
   slf4j: '1.7.21',
   
   // test scopes
-  codemirror: '5.8',
-  babel: '6.1.19',
+  codemirror: '5.13.2',
+  babel: '6.14.0',
   spock: '1.0-groovy-2.4'
 ]
 

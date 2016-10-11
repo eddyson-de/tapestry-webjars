@@ -63,9 +63,9 @@ class WebjarAssetTest extends spock.lang.Specification {
     then:
     MultipleMatchesException e = thrown()
     e.matches == [
-      'META-INF/resources/webjars/babel-core/6.1.19/lib/transformation/file/index.js',
-      'META-INF/resources/webjars/babel-core/6.1.19/lib/transformation/file/options/index.js',
-      'META-INF/resources/webjars/babel-core/6.1.19/index.js'
+      'META-INF/resources/webjars/babel-core/6.14.0/lib/transformation/file/index.js',
+      'META-INF/resources/webjars/babel-core/6.14.0/lib/transformation/file/options/index.js',
+      'META-INF/resources/webjars/babel-core/6.14.0/index.js'
     ]
   }
 
@@ -85,7 +85,7 @@ class WebjarAssetTest extends spock.lang.Specification {
     def asset = assetSource.getUnlocalizedAsset('webjars:babel-core:$version/index.js')
     then:
     asset != null
-    asset.getResource().toURL().toString().contains('6.1.19/index.js')
+    asset.getResource().toURL().toString().contains('6.14.0/index.js')
   }
 
   def "Create webjars asset with version placeholder"(){
@@ -93,7 +93,7 @@ class WebjarAssetTest extends spock.lang.Specification {
     def asset = assetSource.getUnlocalizedAsset('webjars:$version/index.js')
     then:
     asset != null
-    asset.getResource().toURL().toString().contains('6.1.19/index.js')
+    asset.getResource().toURL().toString().contains('6.14.0/index.js')
   }
 
   def "Trying to create webjar for an asset that occurs multiple times throws an exception"(){
@@ -102,8 +102,8 @@ class WebjarAssetTest extends spock.lang.Specification {
     then:
     MultipleMatchesException e = thrown()
     e.matches == [
-      'META-INF/resources/webjars/codemirror/5.8/README.md',
-      'META-INF/resources/webjars/babel-core/6.1.19/README.md'
+      'META-INF/resources/webjars/codemirror/5.13.2/README.md',
+      'META-INF/resources/webjars/babel-core/6.14.0/README.md'
     ]
   }
 
@@ -151,12 +151,12 @@ class WebjarAssetTest extends spock.lang.Specification {
     def relative = resource.forFile('../index.js')
     then:
     relative != null
-    relative.toURL().toString().contains('6.1.19/lib/transformation/file/index.js')
+    relative.toURL().toString().contains('6.14.0/lib/transformation/file/index.js')
     when:
     relative = resource.forFile('../../../../index.js')
     then:
     relative != null
-    relative.toURL().toString().contains('6.1.19/index.js')
+    relative.toURL().toString().contains('6.14.0/index.js')
   }
 
   static class TestModule {
