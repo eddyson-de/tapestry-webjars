@@ -17,7 +17,8 @@ public class WebjarsAssetRequestHandlerSpec extends Specification {
     Logger logger = Mock()
     LoggerSource loggerSource = Stub(){ getLogger(_) >> logger }
     WebJarAssetLocator webJarAssetLocator = WebjarsModule.buildWebJarAssetLocator()
-    WebjarsAssetRequestHandler webjarsAssetRequestHandler = new WebjarsAssetRequestHandler(resourceStreamer, webJarAssetLocator, loggerSource)
+    AssetPathResolver assetPathResolver = new AssetPathResolverImpl(webJarAssetLocator, loggerSource)
+    WebjarsAssetRequestHandler webjarsAssetRequestHandler = new WebjarsAssetRequestHandler(resourceStreamer, assetPathResolver, loggerSource)
     Request request = Stub {
     }
     Response response = Stub {

@@ -54,7 +54,7 @@ class WebjarAssetTest extends spock.lang.Specification {
     def cmAsset = assetSource.getUnlocalizedAsset("webjars:doesnotexist.js")
     then:
     Exception e = thrown()
-    e.message.contains "does not exist"
+    e.message == '''Unable to locate asset 'webjars:doesnotexist.js' (the file does not exist).'''
   }
 
   def "Create asset for resource in a webjar that does not exist"(){
@@ -62,7 +62,7 @@ class WebjarAssetTest extends spock.lang.Specification {
     def cmAsset = assetSource.getUnlocalizedAsset("webjars:doesnotexist:index.js")
     then:
     Exception e = thrown()
-    e.message.contains "does not exist"
+    e.message ==  '''Unable to locate asset 'webjars:doesnotexist:index.js' (the file does not exist).'''
   }
 
   def "Creating an asset with multiple matches throws an exception"(){

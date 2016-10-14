@@ -8,7 +8,6 @@ import org.apache.tapestry5.ioc.LoggerSource;
 import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.Response;
 import org.apache.tapestry5.services.assets.AssetRequestHandler;
-import org.webjars.WebJarAssetLocator;
 
 public class WebjarsAssetRequestHandler implements AssetRequestHandler {
 
@@ -16,11 +15,10 @@ public class WebjarsAssetRequestHandler implements AssetRequestHandler {
 
   private final WebjarsResource rootResource;
 
-  public WebjarsAssetRequestHandler(final ResourceStreamer streamer, final WebJarAssetLocator webJarAssetLocator,
+  public WebjarsAssetRequestHandler(final ResourceStreamer streamer, final AssetPathResolver assetPathResolver,
       final LoggerSource loggerSource) {
     this.streamer = streamer;
-    this.rootResource = new WebjarsResource("/", webJarAssetLocator, loggerSource,
-        Thread.currentThread().getContextClassLoader());
+    this.rootResource = new WebjarsResource("/", assetPathResolver, Thread.currentThread().getContextClassLoader());
   }
 
   @Override
