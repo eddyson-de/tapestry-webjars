@@ -220,4 +220,9 @@ public class WebjarsResource extends AbstractResource {
     return true;
   }
 
+  public Resource createFromRequestPath(final String path) {
+    return new WebjarsResource(WebJarAssetLocator.WEBJARS_PATH_PREFIX + "/" + path, webJarAssetLocator, logger,
+        classLoader);
+  }
+
 }

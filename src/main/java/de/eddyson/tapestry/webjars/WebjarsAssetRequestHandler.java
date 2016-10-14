@@ -27,8 +27,7 @@ public class WebjarsAssetRequestHandler implements AssetRequestHandler {
   public boolean handleAssetRequest(final Request request, final Response response, final String extraPath)
       throws IOException {
     ChecksumPath path = new ChecksumPath(streamer, null, extraPath);
-
-    return path.stream(rootResource.forFile(path.resourcePath));
+    return path.stream(rootResource.createFromRequestPath(path.resourcePath));
   }
 
 }
