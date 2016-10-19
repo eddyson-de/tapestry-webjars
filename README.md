@@ -1,4 +1,5 @@
-# tapestry-webjars [![Build Status](https://travis-ci.org/eddyson-de/tapestry-webjars.svg?branch=master)](https://travis-ci.org/eddyson-de/tapestry-webjars)
+# tapestry-webjars [![Build Status](https://travis-ci.org/eddyson-de/tapestry-webjars.svg?branch=master)](https://travis-ci.org/eddyson-de/tapestry-webjars) [![codecov](https://codecov.io/gh/eddyson-de/tapestry-webjars/branch/master/graph/badge.svg)](https://codecov.io/gh/eddyson-de/tapestry-webjars)
+
 
 [![Join the chat at https://gitter.im/eddyson-de/tapestry-webjars](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/eddyson-de/tapestry-webjars?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Use WebJars (http://www.webjars.org/) together with Tapestry (http://tapestry.apache.org/).
