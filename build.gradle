@@ -68,3 +68,11 @@ bintray {
 jar {
   manifest { attributes 'Tapestry-Module-Classes': 'de.eddyson.tapestry.webjars.WebjarsModule' }
 }
+
+check.dependsOn jacocoTestReport
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+    }
+}
