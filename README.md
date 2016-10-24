@@ -22,7 +22,7 @@ respositories {
 
 dependencies {
   runtime 'de.eddyson:tapestry-webjars:0.9.6'
-  runtime 'org.webjars:jquery:2.1.3'
+  runtime 'org.webjars:jquery:3.1.1'
 }
 
 ```
@@ -33,7 +33,7 @@ dependencies {
 @Core
 public static void overrideJQueryWithNewerVersion(
     final OrderedConfiguration<StackExtension> configuration) {
-  configuration.override("jquery-library", StackExtension.library("webjars:jquery:jquery.js"));
+  configuration.override("jquery-library", StackExtension.library("webjars:jquery:$version/dist/jquery.js"));
 }
 ```
 
@@ -41,7 +41,7 @@ public static void overrideJQueryWithNewerVersion(
 Of course, you can also `@Inject` assets from Webjars inside your component classes.
 ```java
 @Inject
-@Path("webjars:jquery:jquery.js")
+@Path("webjars:jquery:$version/dist/jquery.js")
 private Asset jQuery;
 
 ```
