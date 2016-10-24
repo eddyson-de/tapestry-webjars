@@ -21,7 +21,7 @@ respositories {
 }
 
 dependencies {
-  runtime 'de.eddyson:tapestry-webjars:0.9.6'
+  runtime 'de.eddyson:tapestry-webjars:1.0.0'
   runtime 'org.webjars:jquery:3.1.1'
 }
 
