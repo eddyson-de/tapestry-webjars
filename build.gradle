@@ -14,7 +14,7 @@ apply plugin: 'jacoco'
 def versions= [
   webjars_locator: '0.32',
   tapestry: '5.4.1',
-  slf4j: '1.7.21',
+  slf4j: '1.7.22',
   
   // test scopes
   codemirror: '5.13.2',
