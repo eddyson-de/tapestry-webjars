@@ -16,7 +16,7 @@ A basic usage example to override Tapestry's shipped jQuery library with a newer
 
 ### `build.gradle`:
 ```groovy
-respositories {
+repositories {
   jcenter()
 }
 
