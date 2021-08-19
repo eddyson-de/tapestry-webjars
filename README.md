@@ -1,4 +1,5 @@
-# tapestry-webjars ![status](https://github.com/eddyson-de/tapestry-webjars/actions/workflows/main.yml/badge.svg)
+# tapestry-webjars [![status](https://github.com/eddyson-de/tapestry-webjars/actions/workflows/main.yml/badge.svg)](https://github.com/eddyson-de/tapestry-webjars/actions/workflows/main.yml)
+
 
 [![Join the chat at https://gitter.im/eddyson-de/tapestry-webjars](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/eddyson-de/tapestry-webjars?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
