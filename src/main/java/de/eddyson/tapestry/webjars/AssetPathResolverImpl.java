@@ -1,5 +1,11 @@
 package de.eddyson.tapestry.webjars;
 
+import org.apache.tapestry5.ioc.LoggerSource;
+import org.slf4j.Logger;
+import org.webjars.MultipleMatchesException;
+import org.webjars.NotFoundException;
+import org.webjars.WebJarAssetLocator;
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,11 +13,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.tapestry5.ioc.LoggerSource;
-import org.slf4j.Logger;
-import org.webjars.MultipleMatchesException;
-import org.webjars.WebJarAssetLocator;
 
 public class AssetPathResolverImpl implements AssetPathResolver {
 
@@ -54,7 +55,7 @@ public class AssetPathResolverImpl implements AssetPathResolver {
         } catch (MultipleMatchesException ex) {
           candidates.addAll(ex.getMatches());
 
-        } catch (IllegalArgumentException ex) {
+        } catch (NotFoundException ignored) {
           continue;
         }
       }
@@ -72,7 +73,6 @@ public class AssetPathResolverImpl implements AssetPathResolver {
 
   @Override
   public String resolve(final String path) {
-
     String p = path;
     final String assetPath = p;
     int indexOfColon = p.indexOf(':');
@@ -99,49 +99,40 @@ public class AssetPathResolverImpl implements AssetPathResolver {
         p = p.substring(indexOfColon + 1);
 
         String maybeVersion = webjars.get(webjar);
-        if (maybeVersion != null) {
-          StringBuffer sb = new StringBuffer(p.length());
-          Matcher m = versionVariablePattern.matcher(p);
-          boolean versionNumberAtStart = false;
-          while (m.find()) {
-            if (m.start() == 0) {
-              versionNumberAtStart = true;
-            }
-            m.appendReplacement(sb, maybeVersion);
-          }
-          m.appendTail(sb);
-          p = sb.toString();
-          String prefix = WebJarAssetLocator.WEBJARS_PATH_PREFIX + "/" + webjar + "/";
-          if (versionNumberAtStart) {
-            return prefix + p;
-          } else if (p.startsWith(maybeVersion)) {
-            return prefix + p;
-          } else {
-            String fullPath = webJarAssetLocator.getFullPath(webjar, p);
-            if (logger.isWarnEnabled()) {
-              String pathSuggestion = "webjars:" + webjar + ':' + WebjarsResource.VERSION_VARIABLE
-                  + fullPath.substring(prefix.length() + maybeVersion.length());
-              logger.warn(
-                  "Resolved unspecific asset path \"{}\". For optimal performance, the asset location should be absolute, including WebJar name the version number or the version number placeholder, e.g \"{}\".",
-                  assetPath, pathSuggestion);
-            }
-            return fullPath;
-          }
-
-        } else {
+        if (maybeVersion == null) {
           return path;
-
         }
 
+        StringBuilder sb = new StringBuilder(p.length());
+        Matcher m = versionVariablePattern.matcher(p);
+        boolean versionNumberAtStart = false;
+        while (m.find()) {
+          if (m.start() == 0) {
+            versionNumberAtStart = true;
+          }
+          m.appendReplacement(sb, maybeVersion);
+        }
+        m.appendTail(sb);
+        p = sb.toString();
+        String prefix = WebJarAssetLocator.WEBJARS_PATH_PREFIX + "/" + webjar + "/";
+        if (versionNumberAtStart) {
+          return prefix + p;
+        } else if (p.startsWith(maybeVersion)) {
+          return prefix + p;
+        } else {
+          String fullPath = webJarAssetLocator.getFullPath(webjar, p);
+          if (logger.isWarnEnabled()) {
+            String pathSuggestion = "webjars:" + webjar + ':' + WebjarsResource.VERSION_VARIABLE
+                + fullPath.substring(prefix.length() + maybeVersion.length());
+            logger.warn(
+                "Resolved unspecific asset path \"{}\". For optimal performance, the asset location should be absolute, including WebJar name the version number or the version number placeholder, e.g \"{}\".",
+                assetPath, pathSuggestion);
+          }
+          return fullPath;
+        }
       }
-
-    } catch (MultipleMatchesException e) {
-      throw e;
-    } catch (IllegalArgumentException e) {
+    } catch (NotFoundException ignored) {
       return path;
-
     }
-
   }
-
 }

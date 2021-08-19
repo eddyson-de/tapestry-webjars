@@ -1,10 +1,10 @@
 package de.eddyson.tapestry.webjars;
 
-import java.net.URL;
-
-import org.apache.tapestry5.ioc.Resource;
+import org.apache.tapestry5.commons.Resource;
 import org.apache.tapestry5.ioc.internal.util.AbstractResource;
 import org.webjars.WebJarAssetLocator;
+
+import java.net.URL;
 
 public class WebjarsResource extends AbstractResource {
 
@@ -107,13 +107,9 @@ public class WebjarsResource extends AbstractResource {
       return false;
     }
     if (getPath() == null) {
-      if (other.getPath() != null) {
-        return false;
-      }
-    } else if (!getPath().equals(other.getPath())) {
-      return false;
+      return other.getPath() == null;
+    } else {
+      return getPath().equals(other.getPath());
     }
-    return true;
   }
-
 }

@@ -1,15 +1,14 @@
-package de.eddyson.tapestry.webjars;
+package de.eddyson.tapestry.webjars
 
+import org.apache.tapestry5.http.services.Request
+import org.apache.tapestry5.http.services.Response
 import org.apache.tapestry5.internal.services.ResourceStreamer
 import org.apache.tapestry5.ioc.LoggerSource
-import org.apache.tapestry5.services.Request
-import org.apache.tapestry5.services.Response
 import org.slf4j.Logger
 import org.webjars.WebJarAssetLocator
-
 import spock.lang.Specification
 
-public class WebjarsAssetRequestHandlerSpec extends Specification {
+class WebjarsAssetRequestHandlerSpec extends Specification {
 
   def "create asset from request path"(){
     setup:
@@ -19,9 +18,9 @@ public class WebjarsAssetRequestHandlerSpec extends Specification {
     WebJarAssetLocator webJarAssetLocator = WebjarsModule.buildWebJarAssetLocator()
     AssetPathResolver assetPathResolver = new AssetPathResolverImpl(webJarAssetLocator, loggerSource)
     WebjarsAssetRequestHandler webjarsAssetRequestHandler = new WebjarsAssetRequestHandler(resourceStreamer, assetPathResolver, loggerSource)
-    Request request = Stub {
+      Request request = Stub {
     }
-    Response response = Stub {
+      Response response = Stub {
     }
     when:
     webjarsAssetRequestHandler.handleAssetRequest(request, response, 'somechecksum/codemirror/5.13.2/lib/codemirror.css')

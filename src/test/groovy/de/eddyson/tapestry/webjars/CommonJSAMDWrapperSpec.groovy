@@ -1,11 +1,10 @@
 package de.eddyson.tapestry.webjars
 
-import java.nio.charset.StandardCharsets
-
+import org.apache.tapestry5.commons.Resource
 import org.apache.tapestry5.internal.util.VirtualResource
-import org.apache.tapestry5.ioc.Resource
-
 import spock.lang.Specification
+
+import java.nio.charset.StandardCharsets
 
 class CommonJSAMDWrapperSpec extends Specification {
 

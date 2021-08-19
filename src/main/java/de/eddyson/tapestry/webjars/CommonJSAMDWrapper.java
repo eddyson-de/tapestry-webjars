@@ -1,5 +1,12 @@
 package de.eddyson.tapestry.webjars;
 
+import org.apache.tapestry5.commons.Resource;
+import org.apache.tapestry5.internal.util.VirtualResource;
+import org.apache.tapestry5.json.JSONArray;
+import org.apache.tapestry5.services.javascript.AMDWrapper;
+import org.apache.tapestry5.services.javascript.JavaScriptModuleConfiguration;
+import org.apache.tapestry5.services.javascript.ModuleManager;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,13 +17,6 @@ import java.util.Scanner;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.tapestry5.internal.util.VirtualResource;
-import org.apache.tapestry5.ioc.Resource;
-import org.apache.tapestry5.json.JSONArray;
-import org.apache.tapestry5.services.javascript.AMDWrapper;
-import org.apache.tapestry5.services.javascript.JavaScriptModuleConfiguration;
-import org.apache.tapestry5.services.javascript.ModuleManager;
 
 /**
  * Used to wrap CommonJS libraries as AMD modules. The underlying resource is
@@ -70,21 +70,20 @@ public class CommonJSAMDWrapper {
 
     @Override
     public InputStream openStream() throws IOException {
-
-      Vector<InputStream> v = new Vector<InputStream>(3);
+      Vector<InputStream> v = new Vector<>(3);
       // https://github.com/jrburke/requirejs/issues/1476
-      try (InputStream is = resource.openStream(); Scanner scanner = new Scanner(is, "utf-8")) {
+      try (InputStream is = resource.openStream(); Scanner scanner = new Scanner(is, StandardCharsets.UTF_8)) {
         scanner.useDelimiter(STARTOFINPUT);
         String content = scanner.next();
         Pattern pattern = Pattern.compile("(?<=require\\()(['\"])(.*?)(?:\\.js)?\\1(?=\\))");
         Matcher matcher = pattern.matcher(content);
         JSONArray dependencies = new JSONArray("require", "exports", "module");
-        StringBuffer sb = new StringBuffer(content.length());
+        StringBuilder sb = new StringBuilder(content.length());
         while (matcher.find()) {
           String module = matcher.group(2);
           // rewrite require('module.js') to require('module')
           matcher.appendReplacement(sb, "$1$2$1");
-          dependencies.put(module);
+          dependencies.add(module);
         }
         matcher.appendTail(sb);
 
