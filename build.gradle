@@ -1,32 +1,18 @@
 plugins {
-    id "com.jfrog.bintray" version "1.7.3"
+  id "groovy"
+  id "maven-publish"
+  id "jacoco"
 }
 
 description = "Use Webjars together with Tapestry"
-
 group = "de.eddyson"
-version = "1.0.0"
-
-apply plugin: 'groovy'
-apply plugin: 'maven'
-apply plugin: 'jacoco'
-
-def versions= [
-  webjars_locator: '0.32',
-  tapestry: '5.4.1',
-  slf4j: '1.7.22',
-  
-  // test scopes
-  codemirror: '5.13.2',
-  babel: '6.14.0',
-  spock: '1.0-groovy-2.4'
-]
+version = "1.1.0"
 
 repositories {
-  jcenter()
+  mavenCentral()
 }
 
-sourceCompatibility = '1.7'
+sourceCompatibility = "11"
 
 task sourceJar(type: Jar) {
   dependsOn classes
@@ -34,45 +20,43 @@ task sourceJar(type: Jar) {
   from sourceSets.main.allSource
 }
 
-artifacts {
-  archives sourceJar
+publishing {
+  publications {
+    maven(MavenPublication) {
+      from components.java
+      artifact tasks.sourceJar
+    }
+  }
 }
 
 dependencies {
-  compile "org.slf4j:slf4j-api:$versions.slf4j"
-  compile "org.apache.tapestry:tapestry-core:$versions.tapestry"
-  compile "org.webjars:webjars-locator-core:$versions.webjars_locator"
+  implementation "org.slf4j:slf4j-api:1.7.32"
+  implementation "org.apache.tapestry:tapestry-core:5.7.3"
+  implementation "org.webjars:webjars-locator-core:0.47"
 
-  testCompile "javax.servlet:servlet-api:2.5"
-  testCompile "org.spockframework:spock-tapestry:$versions.spock"
-  testRuntime "org.webjars:codemirror:$versions.codemirror"
-  testRuntime ("org.webjars.npm:babel-core:$versions.babel"){
+  testImplementation "org.apache.tapestry:tapestry-spock:5.7.3"
+
+  testRuntimeOnly "org.slf4j:slf4j-simple:1.7.32"
+  testImplementation "javax.servlet:javax.servlet-api:4.0.1"
+
+  // used as example import libs (versions are hardcoded in tests)
+  testRuntimeOnly "org.webjars:codemirror:5.13.2"
+  testRuntimeOnly("org.webjars.npm:babel-core:6.14.0"){
     transitive = false
   }
-  testRuntime "org.slf4j:slf4j-simple:$versions.slf4j"
-}
-
-bintray {
-    user = 'fooberger'
-    key = System.env.bintrayAPIKey
-    configurations = ['archives']
-    publish = true
-    pkg {
-        repo = 'maven'
-        name = 'de.eddyson:tapestry-webjars'
-        licenses = ['Apache-2.0']
-        vcsUrl = 'https://github.com/eddyson-de/tapestry-webjars'
-    }
 }
 
 jar {
   manifest { attributes 'Tapestry-Module-Classes': 'de.eddyson.tapestry.webjars.WebjarsModule' }
 }
 
-check.dependsOn jacocoTestReport
+test {
+  finalizedBy jacocoTestReport
+}
 
 jacocoTestReport {
-    reports {
-        xml.enabled true
-    }
+  dependsOn test
+  reports {
+    html.required = true
+  }
 }

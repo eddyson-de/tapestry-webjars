@@ -1,20 +1,21 @@
 package de.eddyson.tapestry.webjars
 
+import org.apache.tapestry5.commons.MappedConfiguration
+import org.apache.tapestry5.http.services.ApplicationGlobals
+import org.apache.tapestry5.http.services.Context
+import org.apache.tapestry5.http.services.Request
+import org.apache.tapestry5.http.services.RequestGlobals
+import org.apache.tapestry5.ioc.annotations.ImportModule
+import org.apache.tapestry5.ioc.annotations.Inject
+import org.apache.tapestry5.modules.TapestryModule
+import org.apache.tapestry5.services.AssetSource
+import org.webjars.MultipleMatchesException
+import spock.lang.Specification
+
 import javax.servlet.http.HttpServletRequest
 
-import org.apache.tapestry5.ioc.MappedConfiguration
-import org.apache.tapestry5.ioc.annotations.Inject
-import org.apache.tapestry5.ioc.annotations.SubModule
-import org.apache.tapestry5.modules.TapestryModule
-import org.apache.tapestry5.services.ApplicationGlobals
-import org.apache.tapestry5.services.AssetSource
-import org.apache.tapestry5.services.Context
-import org.apache.tapestry5.services.Request
-import org.apache.tapestry5.services.RequestGlobals
-import org.webjars.MultipleMatchesException
-
-@SubModule([WebjarsModule, TapestryModule, TestModule])
-class WebjarAssetTest extends spock.lang.Specification {
+@ImportModule([WebjarsModule, TapestryModule, TestModule])
+class WebjarAssetTest extends Specification {
 
   @Inject
   private ApplicationGlobals applicationGlobals
@@ -71,9 +72,9 @@ class WebjarAssetTest extends spock.lang.Specification {
     then:
     MultipleMatchesException e = thrown()
     e.matches == [
-      'META-INF/resources/webjars/babel-core/6.14.0/lib/transformation/file/index.js',
+      'META-INF/resources/webjars/babel-core/6.14.0/index.js',
       'META-INF/resources/webjars/babel-core/6.14.0/lib/transformation/file/options/index.js',
-      'META-INF/resources/webjars/babel-core/6.14.0/index.js'
+      'META-INF/resources/webjars/babel-core/6.14.0/lib/transformation/file/index.js'
     ]
   }
 
