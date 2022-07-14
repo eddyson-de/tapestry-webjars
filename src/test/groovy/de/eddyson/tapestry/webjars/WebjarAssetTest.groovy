@@ -111,8 +111,8 @@ class WebjarAssetTest extends Specification {
     then:
     MultipleMatchesException e = thrown()
     e.matches == [
-      'META-INF/resources/webjars/codemirror/5.13.2/README.md',
-      'META-INF/resources/webjars/babel-core/6.14.0/README.md'
+      'META-INF/resources/webjars/babel-core/6.14.0/README.md',
+      'META-INF/resources/webjars/codemirror/5.13.2/README.md'
     ]
   }
 
