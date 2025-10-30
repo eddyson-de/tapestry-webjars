@@ -12,7 +12,7 @@ import org.apache.tapestry5.services.AssetSource
 import org.webjars.MultipleMatchesException
 import spock.lang.Specification
 
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 @ImportModule([WebjarsModule, TapestryModule, TestModule])
 class WebjarAssetTest extends Specification {
